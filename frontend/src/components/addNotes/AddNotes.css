@@ -1,0 +1,60 @@
+.notes-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  width: 100%;
+  gap: 20px;
+}
+
+.note-input-box {
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease-in-out;
+  cursor: text;
+  margin-bottom: 20px;
+}
+
+.note-input-box:focus-within {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.note-title {
+  font-size: 16px;
+  font-family: "Google Sans", "Roboto", arial, sans-serif;
+  font-weight: 500;
+  border: none;
+  outline: none;
+  margin-bottom: 6px;
+  padding: 4px 0;
+}
+
+.note-content {
+  font-size: 14px;
+  font-family: "Google Sans", "Roboto", arial, sans-serif;
+  border: none;
+  outline: none;
+  background: transparent;
+  resize: none;
+  overflow: hidden;
+  line-height: 1.4;
+  min-height: 24px;
+  padding: 4px 0;
+  transition: height 0.2s ease-in-out;
+}
+
+/* Styles for the notes list container */
+.notes-list {
+  width: 100%;
+  max-width: 1200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 0 16px;
+}
