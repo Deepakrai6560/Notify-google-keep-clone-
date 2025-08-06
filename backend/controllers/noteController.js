@@ -61,7 +61,7 @@ exports.getNote = async (req, res) => {
 // Update a note
 exports.updateNote = async (req, res) => {
     try {
-        const { title, content } = req.body;
+        const { title, content, background, isPinned } = req.body;
         const note = await Note.findById(req.params.id);
         
         if (!note) {
@@ -72,8 +72,12 @@ exports.updateNote = async (req, res) => {
             return res.status(403).json({ message: 'Access denied' });
         }
 
-        note.title = title;
-        note.content = content;
+        // Update only if values are provided
+        if (title !== undefined) note.title = title;
+        if (content !== undefined) note.content = content;
+        if (background !== undefined) note.background = background;
+        if (isPinned !== undefined) note.isPinned = isPinned;
+
         const updatedNote = await note.save();
         
         res.json(updatedNote);
@@ -81,6 +85,7 @@ exports.updateNote = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 
 // Delete a note
 exports.deleteNote = async (req, res) => {

@@ -1,55 +1,61 @@
+/* Container for the whole notes section */
 .notes-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 16px;
   width: 100%;
   gap: 20px;
+  box-sizing: border-box;
 }
 
+/* Input box for new note */
 .note-input-box {
   width: 100%;
   max-width: 600px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-  padding: 10px 16px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   transition: box-shadow 0.2s ease-in-out;
   cursor: text;
   margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
 .note-input-box:focus-within {
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
-.note-title {
-  font-size: 16px;
+.note-title,
+.note-content {
   font-family: "Google Sans", "Roboto", arial, sans-serif;
-  font-weight: 500;
   border: none;
   outline: none;
-  margin-bottom: 6px;
   padding: 4px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.note-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 6px;
 }
 
 .note-content {
   font-size: 14px;
-  font-family: "Google Sans", "Roboto", arial, sans-serif;
-  border: none;
-  outline: none;
   background: transparent;
   resize: none;
   overflow: hidden;
   line-height: 1.4;
   min-height: 24px;
-  padding: 4px 0;
   transition: height 0.2s ease-in-out;
 }
 
-/* Styles for the notes list container */
+/* Notes list grid */
 .notes-list {
   width: 100%;
   max-width: 1200px;
@@ -57,4 +63,29 @@
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 16px;
   padding: 0 16px;
+  box-sizing: border-box;
+}
+  @media (max-width: 768px) {
+  .note-input-box {
+    padding: 10px 12px;
+  }
+
+  .note-title {
+    font-size: 15px;
+  }
+
+  .note-content {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .notes-list {
+    grid-template-columns: 1fr; /* One column on small screens */
+    padding: 0 8px;
+  }
+
+  .note-input-box {
+    max-width: 100%;
+  }
 }

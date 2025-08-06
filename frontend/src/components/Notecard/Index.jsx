@@ -1,11 +1,9 @@
 import React from 'react';
 import { FiFlag, FiTrash, FiArchive } from 'react-icons/fi';
 import { PiPaintBrushBroadDuotone } from "react-icons/pi";
-import { MdOutlineArchive } from "react-icons/md";
+import { MdOutlineArchive, MdRestore } from "react-icons/md";
 import { BsPin } from "react-icons/bs";
-
-import { MdRestore } from 'react-icons/md';
-
+import "./Index.css";
 
 const NoteCard = ({ note, onPin, onArchive, onChangeBg, onDelete, onDeleteForever, showTrash }) => {
   const { _id, title, time, isPinned, background, content } = note;
@@ -65,33 +63,33 @@ const NoteCard = ({ note, onPin, onArchive, onChangeBg, onDelete, onDeleteForeve
       <p style={contentStyle}>{content || ''}</p>
       <p style={timeStyle}>{time || ''}</p>
 
-      {showTrash ? (<div style={actionsStyle}>
-        <div className='notesIcon notesIcon-hover'>
-          <MdRestore size={18} onClick={() => onDelete(_id)} />
+      {showTrash ? (
+        <div style={actionsStyle}>
+          <div className='tooltip-wrapper notesIcon notesIcon-hover'>
+            <MdRestore size={18} onClick={() => onDelete(_id)} />
+            <span className='custom-tooltip'>Restore</span>
+          </div>
+          <div className='tooltip-wrapper notesIcon notesIcon-hover'>
+            <FiTrash size={16} onClick={() => onDeleteForever(_id)} />
+            <span className='custom-tooltip'>Delete Forever</span>
+          </div>
         </div>
-        <div className='notesIcon notesIcon-hover'>
-          <FiTrash size={16} onClick={() => onDeleteForever(_id)} />
+      ) : (
+        <div style={actionsStyle}>
+          <div className='tooltip-wrapper notesIcon notesIcon-hover'>
+            <PiPaintBrushBroadDuotone size={18} onClick={() => onChangeBg(_id)} />
+            <span className='custom-tooltip'>Background Color</span>
+          </div>
+          <div className='tooltip-wrapper notesIcon notesIcon-hover'>
+            <MdOutlineArchive size={18} onClick={() => onArchive(_id)} />
+            <span className='custom-tooltip'>Archive</span>
+          </div>
+          <div className='tooltip-wrapper notesIcon notesIcon-hover'>
+            <FiTrash size={18} onClick={() => onDelete(_id)} />
+            <span className='custom-tooltip'>Delete</span>
+          </div>
         </div>
-
-      </div>
-      ) : (<div style={actionsStyle}>
-        <div className='notesIcon notesIcon-hover'>
-          <PiPaintBrushBroadDuotone size={18} onClick={() => onChangeBg(_id)} />
-        </div>
-        <div className='notesIcon notesIcon-hover'>
-          <MdOutlineArchive size={18} onClick={() => onArchive(_id)} />
-        </div>
-        <div className='notesIcon notesIcon-hover'>
-          <FiTrash onClick={() => onDelete(_id)} />
-        </div>
-
-
-
-      </div>)}
-
-
-
-
+      )}
     </div>
   );
 };

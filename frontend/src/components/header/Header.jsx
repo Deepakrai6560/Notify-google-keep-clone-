@@ -16,6 +16,7 @@ import {
 export const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [drawer, setDrawer] = useState(false);
   const location = useLocation(); // ✅ Added
   const navigate = useNavigate();
 
@@ -23,9 +24,13 @@ export const Header = () => {
     setDropdownOpen(!dropdownOpen);
   };
 
+  const openDrawer=() => {
+      setDrawer(!drawer);
+      console.log("Drawer opened");
+  };
+
   const handleLogout = () => {
     localStorage.removeItem('token');
-    console.log('Logout clicked');
     setLoggedIn(false);
     setDropdownOpen(false);
     navigate('/login');
@@ -43,7 +48,7 @@ export const Header = () => {
         {/* Left Part */}
         <div className='left-part'>
           <div className='icon-wrapper'>
-            <MdMenu className='menu-icon' />
+            <MdMenu className='menu-icon' onClick={()=>openDrawer()}/>
           </div>
           <Link to={"/"}>
           <img src={KeepLogo} alt='Keep Logo' className='keep-logo' />

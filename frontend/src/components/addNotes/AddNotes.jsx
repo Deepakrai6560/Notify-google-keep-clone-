@@ -33,8 +33,6 @@ const AddNotes = () => {
 
     try {
       const token = getAuthToken();
-      console.log("Token:", token)
-      // const token=`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Nzg4NzIwZTEyNzI5MGRkZDMyMWZhMCIsImlhdCI6MTc1MjczMDczNywiZXhwIjoxNzUyODE3MTM3fQ.XSPmUyCtYQyNUUUahdDnjw_PsQhyjTTNWWs_69Q-964`
       if (!token) {
         console.error("No authentication token found");
         return;
@@ -61,19 +59,19 @@ const AddNotes = () => {
 
   const fetchNotes = async () => {
     try {
-      // const token = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4Nzg4NzIwZTEyNzI5MGRkZDMyMWZhMCIsImlhdCI6MTc1MjczMDczNywiZXhwIjoxNzUyODE3MTM3fQ.XSPmUyCtYQyNUUUahdDnjw_PsQhyjTTNWWs_69Q-964`;
       const token = getAuthToken();
-      console.log("Token:", token)
       if (!token) {
         console.error("No authentication token found");
         return;
       }
 
-      console.log("Fetching notes...");
-      const response = await axios.get("http://localhost:3000/api/notes?isArchive=false&&isTrash=false", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      console.log("Received notes:", response.data);
+      const response = await axios.get(
+        "http://localhost:3000/api/notes?isArchive=false&&isTrash=false",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
       if (Array.isArray(response.data)) {
         setNotes(response.data);
       } else {
@@ -81,70 +79,100 @@ const AddNotes = () => {
       }
     } catch (error) {
       console.error("Error fetching notes:", error);
-      if (error.response) {
-        console.error("Response data:", error.response.data);
-        console.error("Response status:", error.response.status);
-      }
     }
   };
 
-const handleDelete= async (id) => {
-  try {
-    const token = getAuthToken();
-    if (!token) {
-      console.error("No authentication token found");
-      return;
-    }
-
-    // pass {} as the body, then the config object:
-    const response = await axios.patch(
-      `http://localhost:3000/api/notes/trash/${id}`,
-      {}, //  <-- empty body
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+  const handleDelete = async (id) => {
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        console.error("No authentication token found");
+        return;
       }
-    );
 
-    // update your local state however you like; for example:
-    setNotes((prevNotes) => prevNotes.filter((note) => note._id !== id));
+      const response = await axios.patch(
+        `http://localhost:3000/api/notes/trash/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    console.log("Archive toggled:", response.data);
-  } catch (error) {
-    console.error("Error archiving note:", error.response?.data || error.message);
-  }
-};
-
-const handleArchive = async (id) => {
-  try {
-    const token = getAuthToken();
-    if (!token) {
-      console.error("No authentication token found");
-      return;
+      setNotes((prevNotes) => prevNotes.filter((note) => note._id !== id));
+      console.log("Note trashed:", response.data);
+    } catch (error) {
+      console.error("Error trashing note:", error.response?.data || error.message);
     }
+  };
 
-    // pass {} as the body, then the config object:
-    const response = await axios.patch(
-      `http://localhost:3000/api/notes/${id}`,
-      {}, //  <-- empty body
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+  const handleArchive = async (id) => {
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        console.error("No authentication token found");
+        return;
       }
-    );
 
-    // update your local state however you like; for example:
-    setNotes((prevNotes) => prevNotes.filter((note) => note._id !== id));
+      const response = await axios.patch(
+        `http://localhost:3000/api/notes/${id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    console.log("Archive toggled:", response.data);
-  } catch (error) {
-    console.error("Error archiving note:", error.response?.data || error.message);
-  }
-};
+      setNotes((prevNotes) => prevNotes.filter((note) => note._id !== id));
+      console.log("Note archived:", response.data);
+    } catch (error) {
+      console.error("Error archiving note:", error.response?.data || error.message);
+    }
+  };
+
+  const handleChangeBg = async (id) => {
+    const colors = ["#ffffff", "#fef3c7", "#e0f2fe", "#dcfce7", "#FFB6C1"];
+
+    const noteToUpdate = notes.find((n) => n._id === id);
+    if (!noteToUpdate) return;
+
+    const currentColor = noteToUpdate.background || "#ffffff";
+    const newColor =
+      colors[(colors.indexOf(currentColor) + 1) % colors.length];
+
+    try {
+      const token = getAuthToken();
+      if (!token) {
+        console.error("No token");
+        return;
+      }
+
+      // Backend me update
+      await axios.put(
+        `http://localhost:3000/api/notes/${id}`,
+        { background: newColor },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // Local state update
+      setNotes((prev) =>
+        prev.map((note) =>
+          note._id === id ? { ...note, background: newColor } : note
+        )
+      );
+    } catch (err) {
+      console.error("Error changing background:", err);
+    }
+  };
 
   useEffect(() => {
     fetchNotes();
@@ -192,31 +220,9 @@ const handleArchive = async (id) => {
             )
           )
         }
-        onArchive={(id) =>
-          handleArchive(id)
-        }
-
-        onDelete={(id)=>{
-          handleDelete(id)
-        }}
-
-        onChangeBg={(id) => {
-          const colors = ["#ffffff", "#fef3c7", "#e0f2fe", "#dcfce7","#FFB6C1"];
-          setNotes((prev) =>
-            prev.map((note) =>
-              note._id === id
-                ? {
-                    ...note,
-                    background:
-                      colors[
-                        (colors.indexOf(note.background || "#ffffff") + 1) %
-                          colors.length
-                      ],
-                  }
-                : note
-            )
-          );
-        }}
+        onArchive={handleArchive}
+        onDelete={handleDelete}
+        onChangeBg={handleChangeBg}
       />
     </div>
   );

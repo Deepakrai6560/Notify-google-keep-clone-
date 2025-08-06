@@ -4,7 +4,7 @@ const User = require('../models/User');
 const auth = async (req, res, next) => {
     try {
         // Get token from header
-        console.log('dfskdsf')
+        // console.log('dfskdsf')
         const token = req.header('Authorization')?.replace('Bearer ', '');
         
         if (!token) {
